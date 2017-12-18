@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Custom MOTD
+# Author: taflilou <taflilou@gmail.com>
+# Edit: 2017-06-06
+# GNU General Public License
+
+# TODO (ADD):
+# => Last time this user logged in ?
+# => Potential issues in /var/log/auth.log
+# => Potential issues in /var/log/syslog
+
+echo "########################################"
+
+# Print hostname information
+echo "Hostname:\t" $(hostname)
+
+# Print distribution-related information
+[ -r /etc/lsb-release ] && . /etc/lsb-release
+if [ -z "$DISTRIB_DESCRIPTION" ] && [ -x /usr/bin/lsb-release ]; then
+		DISTRIB_DESCRIPTION=$(lsb-release -s -d)
+fi
+echo "Distribution: \t" $DISTRIB_DESCRIPTION
+
+# Print all IP-related information
+[ -r /home/taflilou/.bash_profile ] && . /home/taflilou/.bash_profile
+echo "Internal IP: \t" `myip`
+# For external IP, make a condition (if not ip_address type, put nothing)
+# echo "External IP: \t"  `myexternalip`
+
+# Print information related to which users are connected
+connected_users=$(who | awk '{ print $1 }' | uniq)
+echo "OnlineUsers: \t" $connected_users
+
+# Since when is my computer up ?
+uptime_info=$(uptime -p)
+echo "Uptime: \t" $uptime_info
+
+echo "########################################"
